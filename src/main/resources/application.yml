@@ -1,0 +1,64 @@
+application.env: LOCAL
+
+server:
+  port: 8080
+
+############################# SPRING CONFIG #############################
+spring:
+  application.name: ta-debezium-engine
+
+##################### ACTUATOR CONFIG FOR APPLICATION HEALTH CHECK #######################
+management.endpoints.web.exposure.include: health,metrics
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: 'true'
+      show-details: always
+
+############################## APPLICATION CONFIGS #################################
+config:
+  ############################ DEBEZIUM ENGINE SETTINGS ############################
+  debezium:
+    ### GENERAL SETTINGS ###
+    engine.name: debezium-pg-connector
+    topic.prefix: KGKDemo
+
+    ### OFFSET SETTINGS - AS A KAFKA TOPIC ###
+    kafka:
+      bootstrap.servers: localhost:9092
+      offset.storage: org.apache.kafka.connect.storage.KafkaOffsetBackingStore
+      offset.storage.partitions: 1
+      offset.storage.topic: DBZ_WAL_RECORDS
+      offset.storage.replication.factor: 3
+      offset.flush.interval.ms: 10000
+
+    ### DATABASE SETTINGS ###
+    database:
+      hostname: localhost
+      port: 5432
+      user: postgres
+      password: postgres
+      dbname: postgres
+
+      connector.class: io.debezium.connector.postgresql.PostgresConnector
+      plugin.name: pgoutput
+      snapshot.mode: never
+      slot.name: dbz_slot
+      publication.name: dbz_publication
+      publication.auto.create.mode: filtered
+
+      ### COMMON TABLES ###
+      schema.include.list: demo
+      table.include.list: demo.student
+      #column.include.list:
+      #column.exclude.list:
+      common.tables.slot_drop_on_stop: true
+      decimal.handling.mode: double
+
+
+    ### MESSAGE SETTINGS ###
+    converter.schemas.enable: false
+
+############################ END ############################
