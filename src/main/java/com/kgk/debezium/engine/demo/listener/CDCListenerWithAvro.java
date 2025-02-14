@@ -12,6 +12,7 @@ import io.debezium.engine.format.ChangeEventFormat;
 import io.debezium.engine.format.Json;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.connect.source.SourceRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +64,17 @@ public class CDCListenerWithAvro {
                 .create(Avro.class)
                 .using(dbzProperties)
                 .notifying(this::handleChangeEventInAvro)
+//                .notifying(record -> {
+//                    GenericRecord genericRecordRecordChangeEvent =  new GenericRecord();
+//                    for (RecordChangeEvent<GenericRecord> recordChange : record) {
+//                        GenericRecord record = recordChange.record();      // Now you can directly access the Avro record
+//                        GenericRecord after = (GenericRecord) record.get("after");
+//                        if (after != null) {
+//                            Long id = (Long) after.get("id");
+//                            String name = after.get("name").toString();
+//                        }
+//                    }
+//                })
                 .build()
         ){
             this.engineInAvro = engine;
