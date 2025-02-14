@@ -182,31 +182,6 @@ public class CDCListener {
         }
     }
 
-//    private void handleChangeEvent(List<ChangeEvent<String, String>> records, DebeziumEngine.RecordCommitter<ChangeEvent<String, String>> committer) throws InterruptedException {
-//        log.info("*** records: {} ", records);
-//        for (ChangeEvent<String, String> r : records) {
-//            try {
-//                log.info("*** record: {} ", r);
-//                DBRecord record = mapper.readerFor(DBRecord.class).readValue(r.value());
-//                if (record.isHeartBeat()) {
-//                    log.info("heartbeat, ts_ms : \"{}\"", record.getTs_ms());
-//                    continue;
-//                }
-//                if (record.getSource().getTable().equalsIgnoreCase("ftp_current")) {
-//                    //TODO
-//                    log.info("ftp_current");
-//                }
-//                log.info("{}", record);
-//            } catch (JsonProcessingException jsonProcessingException) {
-//                log.error("error deserializing to DBRecord, record {}, exception", r, jsonProcessingException);
-//            } finally {
-//                committer.markProcessed(r);
-//            }
-//        }
-//    }
-
-
-
     @PostConstruct
     public void start() {
         executor.execute(engineInJson);

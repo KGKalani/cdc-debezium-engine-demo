@@ -17,8 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.Map;
 
-//import static com.kaleris.debezium.engine.common.enums.Destination.FTP_CURRENT_DEST;
-
 @Service
 public class DestinationRouteService {
     private final Logger logger = LoggerFactory.getLogger(DestinationRouteService.class);
