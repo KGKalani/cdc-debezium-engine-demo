@@ -1,5 +1,6 @@
-package com.kgk.debeziumenginedemo.listener;
+package com.kgk.debezium.engine.demo.listener;
 
+import com.kgk.debezium.engine.demo.service.DestinationRouteService;
 import io.debezium.embedded.Connect;
 import io.debezium.engine.ChangeEvent;
 import io.debezium.engine.DebeziumEngine;
@@ -12,10 +13,15 @@ import org.apache.kafka.connect.source.SourceRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.sql.Struct;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -23,8 +29,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Service
+@ConditionalOnProperty(name = "config.application.enable-debezium-cdc-engine", havingValue = "true", matchIfMissing = false)
 public class CDCListener {
     private final Logger logger = LoggerFactory.getLogger(CDCListener.class);
+    @Autowired
+    private DestinationRouteService destinationRouteService;
     /**
      * The Debezium engine which needs to be loaded with the configurations, Started and Stopped - for the
      * CDC to work.
@@ -37,13 +46,16 @@ public class CDCListener {
      * Single thread which runs the Debezium engine asynchronously.
      */
     private final ExecutorService executor;
+    private final ZoneId estZoneId;
 
     /**
      * Constructor which loads the configurations and sets a callback method 'handleEvent', which is invoked when
      * a DataBase transactional operation is performed.
      */
     @Autowired
-    public CDCListener(Properties dbzProperties) {
+    public CDCListener(@Qualifier("dbzProperties") Properties dbzProperties) {
+        this.executor = Executors.newSingleThreadExecutor();
+        this.estZoneId = ZoneId.of("America/New_York") ;
 
         try (DebeziumEngine<RecordChangeEvent<SourceRecord>> engine = DebeziumEngine
                 .create(ChangeEventFormat.of(Connect.class))
@@ -55,7 +67,6 @@ public class CDCListener {
         } catch (IOException ioException) {
             logger.error("RTIOException", ioException);
         }
-
 
         //---------------------Connect.class with ChangeEvent<SourceRecord, SourceRecord>
         try(DebeziumEngine<ChangeEvent<SourceRecord, SourceRecord>> engine = DebeziumEngine
@@ -69,7 +80,7 @@ public class CDCListener {
             logger.error("RTIOException", ioException);
         }
 
-        //---------------------Json.class with ChangeEvent<SourceRecord, SourceRecord>
+        //---------------------Json.class with ChangeEvent<String, String>
         try(DebeziumEngine<ChangeEvent<String, String>> engine = DebeziumEngine
                 .create(Json.class)
                 .using(dbzProperties)
@@ -81,12 +92,13 @@ public class CDCListener {
             logger.error("RTIOException", ioException);
         }
 
-        this.executor = Executors.newSingleThreadExecutor();
+
     }
 
+    //=============================Capture Single Records in Json Format==========================================================
     /**
-     * Capture Single Records
-     * @param changeRecord
+     * Capture Single Records in Json Format
+     * @param changeRecord : ChangeEvent
      */
     private void handleChangeEventInJson(ChangeEvent<String, String> changeRecord) {
         try {
@@ -94,14 +106,16 @@ public class CDCListener {
                 if (changeRecord.destination().contains("__debezium-heartbeat")) {
                     logger.info("This is heartbeat event. source {}", changeRecord.value());
                 } else {
-                    logger.info("Change Record: "+ changeRecord);
+                    //destinationRouteService.routeJson(changeRecord, Timestamp.valueOf(LocalDateTime.now(estZoneId)));
+                    destinationRouteService.routeAvro(changeRecord, Timestamp.valueOf(LocalDateTime.now(estZoneId)));
                 }
             }
         } catch (Exception e) {
             logger.error("Change Event Handler failed due to {} ",e.getMessage());
         }
     }
-    //=======================================================================================
+
+    //========================Batch process : Capturing Batch Events in Json Format====================================================
     /**
      * Json.class
      * Capturing Change Event in Json format
@@ -136,7 +150,7 @@ public class CDCListener {
 
     }*/
 
-//======================================================================================================
+//==================================Capturing Change Event in Connect Class format====================================================================
     /**
      * Connect.class
      * Capturing Change Event in Connect Class format
@@ -153,8 +167,7 @@ public class CDCListener {
         }
     }
 
-//========================================================================================
-
+//====================================Batch process : Capturing Batch Events====================================================
     /**
      * Batch process
      * Capturing Batch Events

@@ -1,4 +1,4 @@
-package com.kgk.debeziumenginedemo;
+package com.kgk.debezium.engine.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

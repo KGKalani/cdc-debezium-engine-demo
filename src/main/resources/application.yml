@@ -5,7 +5,15 @@ server:
 
 ############################# SPRING CONFIG #############################
 spring:
-  application.name: ta-debezium-engine
+  application.name: cdc-debezium-engine
+  kafka:
+    bootstrap.servers: localhost:29092
+    topic-avro: LOCAL_STUDENT_DATA_AVRO
+    topic-json: LOCAL_STUDENT_DATA_JSON
+    topic-student-avro: LOCAL_STUDENT_AVRO
+    schema:
+      registry:
+        url: http://127.0.0.1:8081/
 
 ##################### ACTUATOR CONFIG FOR APPLICATION HEALTH CHECK #######################
 management.endpoints.web.exposure.include: health,metrics
@@ -24,22 +32,22 @@ config:
     ### GENERAL SETTINGS ###
     engine.name: debezium-pg-connector
     topic.prefix: KGKDemo
+    heartbeat.interval.ms: 30000
 
     ### OFFSET SETTINGS - AS A KAFKA TOPIC ###
     kafka:
-      bootstrap.servers: localhost:9092
       offset.storage: org.apache.kafka.connect.storage.KafkaOffsetBackingStore
       offset.storage.partitions: 1
       offset.storage.topic: DBZ_WAL_RECORDS
-      offset.storage.replication.factor: 3
+      offset.storage.replication.factor: 1
       offset.flush.interval.ms: 10000
 
     ### DATABASE SETTINGS ###
     database:
       hostname: localhost
       port: 5432
-      user: postgres
-      password: postgres
+      user: debezium_user4
+      password: kgk123
       dbname: postgres
 
       connector.class: io.debezium.connector.postgresql.PostgresConnector
@@ -47,11 +55,11 @@ config:
       snapshot.mode: never
       slot.name: dbz_slot
       publication.name: dbz_publication
-      publication.auto.create.mode: filtered
+      publication.auto.create.mode: disabled
 
       ### COMMON TABLES ###
       schema.include.list: demo
-      table.include.list: demo.student
+      table.include.list: demo.students
       #column.include.list:
       #column.exclude.list:
       common.tables.slot_drop_on_stop: true
@@ -60,5 +68,10 @@ config:
 
     ### MESSAGE SETTINGS ###
     converter.schemas.enable: false
+
+  application:
+    enable-rest-api : false
+    enable-debezium-cdc-engine: false
+    enable-debezium-cdc-engine-avro: true
 
 ############################ END ############################

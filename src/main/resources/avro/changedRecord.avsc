@@ -1,0 +1,38 @@
+{
+  "namespace": "com.kgk.debezium.engine.demo.dto", //Package where model needs to be generated
+  "name": "ChangedRecord", //Model Name
+  "type": "record",
+  "fields": [
+    {
+      "name": "source",
+      "type": {
+        "namespace": "com.kgk.debezium.engine.demo.dto",
+        "name": "Source",
+        "type": "record",
+        "fields": [
+          {"name": "db","type": "string"},
+          {"name": "schema", "type": "string" },
+          {"name": "table", "type": "string" },
+          {"name": "lsn", "type": "long" }
+        ]
+      }
+    },
+    {
+      "name": "operation",
+      "type": "string"
+    },
+    {
+      "name": "tsMs",
+      "type": "long"
+    } ,
+    {
+      "name": "data",
+      "type": {
+        "type": "map",
+        //"values": ["string", "int", "long", "boolean", "null"]
+        "values": "string"
+      }
+
+    }
+  ]
+}

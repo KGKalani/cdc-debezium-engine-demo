@@ -1,0 +1,95 @@
+[key = {
+  "id": 8
+}, value = {
+  "before": {
+    "id": 8,
+    "name": "Alice",
+    "address_id": 6,
+    "department_id": 2,
+    "department": "MATHS",
+    "is_active": true,
+    "created_date": 1738011601489,
+    "modified_date": 1738012109635
+  },
+  "after": null,
+  "source": {
+    "version": "2.6.1.Final",
+    "connector": "postgresql",
+    "name": "KGKDemo",
+    "ts_ms": 1737992455057,
+    "snapshot": "false",
+    "db": "postgres",
+    "sequence": "[\"289812400\",\"289812456\"]",
+    "ts_us": 1737992455057009,
+    "ts_ns": 1737992455057009000,
+    "schema": "demo",
+    "table": "students",
+    "txId": 1331,
+    "lsn": 289812456,
+    "xmin": null
+  },
+  "op": "d",
+  "ts_ms": 1737992455421,
+  "ts_us": 1737992455421336,
+  "ts_ns": 1737992455421336900,
+  "transaction": null
+},
+sourceRecord = SourceRecord {
+  sourcePartition = {
+  server = KGKDemo
+},
+  sourceOffset = {
+  lsn_proc = 289812456,
+  messageType = DELETE,
+  lsn_commit = 289812400,
+  lsn = 289812456,
+  txId = 1331,
+  ts_usec = 1737992455057009
+  }
+}
+ConnectRecord {
+  topic = 'KGKDemo.demo.students',
+  kafkaPartition = null,
+  key = Struct {
+  id = 8
+},
+  keySchema = Schema {
+  KGKDemo.demo.students.Key: STRUCT
+},
+  value = Struct {
+  before = Struct {
+  id = 8,
+  name = Alice,
+  address_id = 6,
+  department_id = 2,
+  department = MATHS,
+  is_active = true,
+  created_date = Tue Jan 28 02: 30: 01 IST 2025,
+  modified_date = Tue Jan 28 02: 38: 29 IST 2025
+},
+  source = Struct {
+  version = 2.6.1.Final,
+  connector = postgresql,
+  name = KGKDemo,
+  ts_ms = 1737992455057,
+  db = postgres,
+  sequence = ["289812400", "289812456"],
+  ts_us = 1737992455057009,
+  ts_ns = 1737992455057009000,
+  schema = demo,
+  table = students,
+  txId = 1331,
+  lsn = 289812456
+  },
+  op = d,
+  ts_ms = 1737992455421,
+  ts_us = 1737992455421336,
+  ts_ns = 1737992455421336900
+  },
+  valueSchema = Schema {
+  KGKDemo.demo.students.Envelope: STRUCT
+},
+  timestamp = null,
+  headers = ConnectHeaders(headers = )
+  }
+]

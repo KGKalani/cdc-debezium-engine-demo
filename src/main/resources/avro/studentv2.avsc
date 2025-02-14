@@ -1,0 +1,59 @@
+{
+  "namespace": "com.kgk.debezium.engine.demo.dto",
+  //Package where model needs to be generated
+  "type": "record",
+  "name": "StudentV2",
+  //Model Name
+  "fields": [
+    {
+      "name": "id",
+      "type": "int"
+    },
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "full_name",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "address_id",
+      "type": "int"
+    },
+    {
+      "name": "department_id",
+      "type": "int"
+    },
+    {
+      "name": "department",
+      "type": "string"
+    },
+    {
+      "name": "is_active",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "name": "created_date",
+      "type": [
+        "null",
+        {
+          "type": "int",
+          "logicalType": "date"
+        }
+      ]
+    },
+    {
+      "name": "modified_date",
+      "type": [
+        "null",
+        {
+          "type": "int",
+          "logicalType": "date"
+        }
+      ]
+    }
+  ]
+}

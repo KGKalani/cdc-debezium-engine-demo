@@ -1,4 +1,4 @@
-package com.kgk.debeziumenginedemo.config;
+package com.kgk.debezium.engine.demo.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +16,7 @@ public class DBZEngineConfiguration {
     @Value("${config.debezium.topic.prefix}")
     private String TOPIC_PREFIX;
 
-    @Value("${config.debezium.kafka.bootstrap.servers}")
+    @Value("${spring.kafka.bootstrap.servers}")
     private String BOOTSTRAP_SERVERS;
 
     @Value("${config.debezium.kafka.offset.storage}")
@@ -85,15 +85,16 @@ public class DBZEngineConfiguration {
     @Value("${config.debezium.converter.schemas.enable}")
     private String CONVERTER_SCHEMAS_ENABLE;
 
-    @Bean("props")
-    @Primary
+    @Bean("dbzProperties")
+    //@Primary
     public Properties props() {
-        Properties properties = io.debezium.config.Configuration.create()
+        return io.debezium.config.Configuration.create()
                 /*
                     GENERAL SETTINGS
                  */
                 .with("name", NAME)
                 .with("topic.prefix", TOPIC_PREFIX)
+                .with("heartbeat.interval.ms", "30000")
 
                 /*
                     OFFSET SETTINGS - AS A KAFKA TOPIC
@@ -128,19 +129,16 @@ public class DBZEngineConfiguration {
 //                .with("column.exclude.list", COLUMN_INCLUDE_LIST) TODO does not work properly
                 .with("decimal.handling.mode", DECIMAL_HANDLING_MODE)
                 .with("time.precision.mode","connect")
-//                .with("skip.messages.without.change", "true")
+                .with("skip.messages.without.change", "true")
+                .with("include.before", "true") //if we need before record we need to set this as true
 
                 /*
                     MESSAGE SETTINGS
                  */
                 .with("converter.schemas.enable", CONVERTER_SCHEMAS_ENABLE)
                 .with("enable.idempotence", "false")
-                .with("heartbeat.interval.ms", "30000")
-
                 .build()
                 .asProperties();
-
-        return properties;
     }
 
 }
