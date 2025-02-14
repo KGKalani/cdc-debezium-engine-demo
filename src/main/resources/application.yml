@@ -73,5 +73,6 @@ config:
     enable-rest-api : false
     enable-debezium-cdc-engine: false
     enable-debezium-cdc-engine-avro: true
+    enable-debezium-cdc-engine-json: false
 
 ############################ END ############################
