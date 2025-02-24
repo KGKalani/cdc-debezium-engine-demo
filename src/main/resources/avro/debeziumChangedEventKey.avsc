@@ -1,0 +1,12 @@
+{
+  "type": "record",
+  "name": "Key",
+  "namespace": "KGKDemo.demo.students",
+  "fields": [
+    {
+      "name": "id",
+      "type": "int"
+    }
+  ],
+  "connect.name": "KGKDemo.demo.students.Key"
+}

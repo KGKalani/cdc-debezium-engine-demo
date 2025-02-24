@@ -1,0 +1,120 @@
+{
+  "namespace": "com.kgk.debezium.engine.demo.dto", //Package where model needs to be generated
+  "name": "StudentChangedRecord", //Model Name
+  "type": "record",
+  "fields": [
+    {
+      "name": "source",
+      "type": {
+        "namespace": "com.kgk.debezium.engine.demo.dto",
+        "name": "Source",
+        "type": "record",
+        "fields": [
+          {
+            "name": "db",
+            "type": "string"
+          },
+          {
+            "name": "schema",
+            "type": "string"
+          },
+          {
+            "name": "table",
+            "type": "string"
+          },
+          {
+            "name": "lsn",
+            "type": [
+              "null",
+              "long"
+            ],
+            "default": null
+          },
+          {
+            "name": "ts_ms",
+            "type": "long"
+          }
+        ]
+      }
+    },
+    {
+      "name": "operation",
+      "type": "string"
+    },
+    {
+      "name": "ts_ms",
+      "type": [
+        "null",
+        "long"
+      ],
+      "default": null
+    },
+    {
+      "name": "data",
+      "type": {
+        "namespace": "com.kgk.debezium.engine.demo.dto",//Package where model needs to be generated
+        "name": "Student",//Model Name
+        "type": "record",
+        "fields": [
+          {
+            "name": "id",
+            "type": "int"
+          },
+          {
+            "name": "name",
+            "type": ["null", "string"],
+            "default": null
+          },
+          {
+            "name": "address_id",
+            "type": ["null", "int"], //type is either be null or int
+            "default": null
+          },
+          {
+            "name": "department_id",
+            "type": ["null", "int"], //type is either be null or int
+            "default": null
+          },
+          {
+            "name": "department",
+            "type": ["null","string"], //type is either be null or string
+            "default": null
+          },
+          {
+            "name": "is_active",
+            "type": [
+              {
+                "type": "boolean",
+                "connect.default": true
+              },
+              "null"
+            ],
+            "default": true
+          },
+          {
+            "name": "created_date",
+            "type": [
+              "null",
+              {
+                "type": "long",
+                "logicalType": "timestamp-millis"
+              }
+            ],
+            "default": null
+          },
+          {
+            "name": "modified_date",
+            "type": [
+              "null",
+              {
+                "type": "long",
+                "logicalType": "timestamp-millis"
+              }
+            ],
+            "default": null
+          }
+        ]
+      }
+    }
+  ]
+}
