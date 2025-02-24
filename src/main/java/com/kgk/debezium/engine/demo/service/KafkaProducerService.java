@@ -1,7 +1,7 @@
 package com.kgk.debezium.engine.demo.service;
 
-import com.kgk.debezium.engine.demo.dto.ChangedRecord;
-import com.kgk.debezium.engine.demo.dto.StudentV2;
+import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.specific.SpecificRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +23,12 @@ public class KafkaProducerService {
     private KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
-    private KafkaTemplate<String, ChangedRecord> kafkaTemplateAvro;
+    private KafkaTemplate<String, SpecificRecord> kafkaTemplateAvroSpecificRecord;
 
     @Autowired
-    private KafkaTemplate<String, StudentV2> kafkaTemplateStudentAvro;
+    private KafkaTemplate<String, GenericRecord> kafkaTemplateAvroGenericRecord;
 
-    public void sendMessageJson(String topic,Integer partition, String key, String message) {
+    public void sendMessageWithJsonSerialization(String topic, Integer partition, String key, String message) {
         logger.info("kafka key : {} message : {} ", key, message);
         try {
             CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(topic, key, message);
@@ -45,11 +45,10 @@ public class KafkaProducerService {
         }
     }
 
-    public void sendMessageAvro(String topic,Integer partition, String key, ChangedRecord message) {
+    public void sendSpecificRecordMessageWithAvroSerialization(String topic, Integer partition, String key, SpecificRecord message) {
         logger.info("kafka key : {} message : {} ", key, message);
         try {
-            CompletableFuture<SendResult<String, ChangedRecord>> future = kafkaTemplateAvro.send(topic, key, message);
-            //kafkaTemplate.send(topic, partition, key, message);
+            CompletableFuture<SendResult<String, SpecificRecord>> future = kafkaTemplateAvroSpecificRecord.send(topic, key, message);
             future.whenComplete((result, ex) -> {
                 if (ex == null) {
                     logger.info("Message {} sent to topic-> {}, partition -> {} with offset -> {}", message, topic, result.getRecordMetadata().partition(), result.getRecordMetadata().offset());
@@ -63,11 +62,10 @@ public class KafkaProducerService {
         }
     }
 
-    public void sendStudentMessageAvro(String topic,Integer partition, String key, StudentV2 message) {
+    public void sendGenericRecordMessageWithAvroSerialization(String topic, Integer partition, String key, GenericRecord message) {
         logger.info("kafka key : {} message : {} ", key, message);
         try {
-            CompletableFuture<SendResult<String, StudentV2>> future = kafkaTemplateStudentAvro.send(topic, key, message);
-            //kafkaTemplate.send(topic, partition, key, message);
+            CompletableFuture<SendResult<String, GenericRecord>> future = kafkaTemplateAvroGenericRecord.send(topic, key, message);
             future.whenComplete((result, ex) -> {
                 if (ex == null) {
                     logger.info("Message {} sent to topic-> {}, partition -> {} with offset -> {}", message, topic, result.getRecordMetadata().partition(), result.getRecordMetadata().offset());

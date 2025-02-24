@@ -1,8 +1,8 @@
 package com.kgk.debezium.engine.demo.config;
 
-import com.kgk.debezium.engine.demo.dto.ChangedRecord;
-import com.kgk.debezium.engine.demo.dto.StudentV2;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
+import org.apache.avro.generic.GenericRecord;
+import org.apache.avro.specific.SpecificRecord;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.connect.json.JsonSerializer;
@@ -41,7 +41,7 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public ProducerFactory<String, ChangedRecord> producerFactoryAvro() {
+    public ProducerFactory<String, SpecificRecord> producerFactoryAvroSpecificRecord() {
         Map<String, Object> kafkaProducerConfigProps = new HashMap<>();
         kafkaProducerConfigProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         kafkaProducerConfigProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
@@ -51,7 +51,7 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public ProducerFactory<String, StudentV2> producerFactoryStudentAvro() {
+    public ProducerFactory<String, GenericRecord> producerFactoryAvroGenericRecord() {
         Map<String, Object> kafkaProducerConfigProps = new HashMap<>();
         kafkaProducerConfigProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         kafkaProducerConfigProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
@@ -66,12 +66,13 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, ChangedRecord> kafkaTemplateAvro() {
-        return new KafkaTemplate<>(producerFactoryAvro());
+    public KafkaTemplate<String, SpecificRecord> kafkaTemplateAvroSpecificRecord() {
+        return new KafkaTemplate<>(producerFactoryAvroSpecificRecord());
     }
 
     @Bean
-    public KafkaTemplate<String, StudentV2> kafkaTemplateStudentAvro() {
-        return new KafkaTemplate<>(producerFactoryStudentAvro());
+    public KafkaTemplate<String, GenericRecord> kafkaTemplateAvroGenericRecord() {
+        return new KafkaTemplate<>(producerFactoryAvroGenericRecord());
     }
+
 }

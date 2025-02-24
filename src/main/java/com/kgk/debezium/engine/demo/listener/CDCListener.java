@@ -106,9 +106,8 @@ public class CDCListener {
                 if (changeRecord.destination().contains("__debezium-heartbeat")) {
                     logger.info("This is heartbeat event. source {}", changeRecord.value());
                 } else {
-                    //destinationRouteService.routeJson(changeRecord, Timestamp.valueOf(LocalDateTime.now(estZoneId)));
-                    destinationRouteService.routeAvro(changeRecord, Timestamp.valueOf(LocalDateTime.now(estZoneId)));
-                }
+                    destinationRouteService.routeJson(changeRecord, Timestamp.valueOf(LocalDateTime.now(estZoneId)));
+                 }
             }
         } catch (Exception e) {
             logger.error("Change Event Handler failed due to {} ",e.getMessage());

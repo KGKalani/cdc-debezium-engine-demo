@@ -4,56 +4,63 @@
   "type": "record",
   "name": "StudentV2",
   //Model Name
-  "fields": [
-    {
-      "name": "id",
-      "type": "int"
-    },
-    {
-      "name": "name",
-      "type": "string"
-    },
-    {
-      "name": "full_name",
-      "type": ["null", "string"],
-      "default": null
-    },
-    {
-      "name": "address_id",
-      "type": "int"
-    },
-    {
-      "name": "department_id",
-      "type": "int"
-    },
-    {
-      "name": "department",
-      "type": "string"
-    },
-    {
-      "name": "is_active",
-      "type": "boolean",
-      "default": false
-    },
-    {
-      "name": "created_date",
-      "type": [
-        "null",
-        {
-          "type": "int",
-          "logicalType": "date"
-        }
-      ]
-    },
-    {
-      "name": "modified_date",
-      "type": [
-        "null",
-        {
-          "type": "int",
-          "logicalType": "date"
-        }
-      ]
-    }
-  ]
+  "fields":[
+  {
+    "name": "id",
+    "type": "int"
+  },
+  {
+    "name": "name",
+    "type": ["null", "string"],
+    "default": null
+  },
+  {
+    "name": "address_id",
+    "type": ["null", "int"], //type is either be null or int
+    "default": null
+  },
+  {
+    "name": "department_id",
+    "type": ["null", "int"], //type is either be null or int
+    "default": null
+  },
+  {
+    "name": "department",
+    "type": ["null","string"], //type is either be null or string
+    "default": null
+  },
+  {
+    "name": "is_active",
+    "type": [
+      {
+        "type": "boolean",
+        "connect.default": true
+      },
+      "null"
+      ],
+    "default": true
+  },
+  {
+    "name": "created_date",
+    "type": [
+      "null",
+      {
+        "type": "long",
+         "logicalType": "timestamp-millis"
+      }
+    ],
+    "default": null
+  },
+  {
+    "name": "modified_date",
+    "type": [
+      "null",
+      {
+        "type": "long",
+        "logicalType": "timestamp-millis"
+      }
+    ],
+    "default": null
+  }
+]
 }

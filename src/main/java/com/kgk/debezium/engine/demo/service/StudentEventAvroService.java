@@ -28,6 +28,6 @@ public class StudentEventAvroService {
                 .setIsActive(studentRequestModel.is_active())
                 .setCreatedDate(LocalDate.now())
                 .setModifiedDate(LocalDate.now()).build();
-        kafkaProducerService.sendStudentMessageAvro(topic, null, String.valueOf(studentRecord.getId()), studentRecord);
+        kafkaProducerService.sendSpecificRecordMessageWithAvroSerialization(topic, null, String.valueOf(studentRecord.getId()), studentRecord);
     }
 }

@@ -5,25 +5,20 @@
  */
 package com.kgk.debezium.engine.demo.dto;
 
-import org.apache.avro.generic.GenericArray;
-import org.apache.avro.specific.SpecificData;
-import org.apache.avro.util.Utf8;
-import org.apache.avro.message.BinaryMessageEncoder;
 import org.apache.avro.message.BinaryMessageDecoder;
+import org.apache.avro.message.BinaryMessageEncoder;
 import org.apache.avro.message.SchemaStore;
+import org.apache.avro.specific.SpecificData;
 
 @org.apache.avro.specific.AvroGenerated
 public class Student extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 8488038568614491473L;
+  private static final long serialVersionUID = -6917057013984494623L;
 
 
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Student\",\"namespace\":\"com.kgk.debezium.engine.demo.dto\",\"fields\":[{\"name\":\"id\",\"type\":\"int\"},{\"name\":\"name\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"address_id\",\"type\":[\"int\",\"null\"]},{\"name\":\"department_id\",\"type\":[\"int\",\"null\"]},{\"name\":\"department\",\"type\":[{\"type\":\"string\",\"avro.java.string\":\"String\"},\"null\"]},{\"name\":\"is_active\",\"type\":\"boolean\",\"default\":false},{\"name\":\"created_date\",\"type\":[\"null\",{\"type\":\"int\",\"logicalType\":\"date\"}]},{\"name\":\"modified_date\",\"type\":[\"null\",{\"type\":\"int\",\"logicalType\":\"date\"}]}]}");
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Student\",\"namespace\":\"com.kgk.debezium.engine.demo.dto\",\"fields\":[{\"name\":\"id\",\"type\":\"int\"},{\"name\":\"name\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"address_id\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"department_id\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"department\",\"type\":[\"null\",{\"type\":\"string\",\"avro.java.string\":\"String\"}],\"default\":null},{\"name\":\"is_active\",\"type\":[{\"type\":\"boolean\",\"connect.default\":true},\"null\"],\"default\":true},{\"name\":\"created_date\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"modified_date\",\"type\":[\"null\",\"long\"],\"default\":null}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static final SpecificData MODEL$ = new SpecificData();
-  static {
-    MODEL$.addLogicalTypeConversion(new org.apache.avro.data.TimeConversions.DateConversion());
-  }
 
   private static final BinaryMessageEncoder<Student> ENCODER =
       new BinaryMessageEncoder<>(MODEL$, SCHEMA$);
@@ -81,9 +76,9 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
   private java.lang.Integer address_id;
   private java.lang.Integer department_id;
   private java.lang.String department;
-  private boolean is_active;
-  private java.time.LocalDate created_date;
-  private java.time.LocalDate modified_date;
+  private java.lang.Boolean is_active;
+  private java.lang.Long created_date;
+  private java.lang.Long modified_date;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -103,7 +98,7 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
    * @param created_date The new value for created_date
    * @param modified_date The new value for modified_date
    */
-  public Student(java.lang.Integer id, java.lang.String name, java.lang.Integer address_id, java.lang.Integer department_id, java.lang.String department, java.lang.Boolean is_active, java.time.LocalDate created_date, java.time.LocalDate modified_date) {
+  public Student(java.lang.Integer id, java.lang.String name, java.lang.Integer address_id, java.lang.Integer department_id, java.lang.String department, java.lang.Boolean is_active, java.lang.Long created_date, java.lang.Long modified_date) {
     this.id = id;
     this.name = name;
     this.address_id = address_id;
@@ -147,8 +142,8 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
     case 3: department_id = (java.lang.Integer)value$; break;
     case 4: department = value$ != null ? value$.toString() : null; break;
     case 5: is_active = (java.lang.Boolean)value$; break;
-    case 6: created_date = (java.time.LocalDate)value$; break;
-    case 7: modified_date = (java.time.LocalDate)value$; break;
+    case 6: created_date = (java.lang.Long)value$; break;
+    case 7: modified_date = (java.lang.Long)value$; break;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -242,7 +237,7 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
    * Gets the value of the 'is_active' field.
    * @return The value of the 'is_active' field.
    */
-  public boolean getIsActive() {
+  public java.lang.Boolean getIsActive() {
     return is_active;
   }
 
@@ -251,7 +246,7 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
    * Sets the value of the 'is_active' field.
    * @param value the value to set.
    */
-  public void setIsActive(boolean value) {
+  public void setIsActive(java.lang.Boolean value) {
     this.is_active = value;
   }
 
@@ -259,7 +254,7 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
    * Gets the value of the 'created_date' field.
    * @return The value of the 'created_date' field.
    */
-  public java.time.LocalDate getCreatedDate() {
+  public java.lang.Long getCreatedDate() {
     return created_date;
   }
 
@@ -268,7 +263,7 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
    * Sets the value of the 'created_date' field.
    * @param value the value to set.
    */
-  public void setCreatedDate(java.time.LocalDate value) {
+  public void setCreatedDate(java.lang.Long value) {
     this.created_date = value;
   }
 
@@ -276,7 +271,7 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
    * Gets the value of the 'modified_date' field.
    * @return The value of the 'modified_date' field.
    */
-  public java.time.LocalDate getModifiedDate() {
+  public java.lang.Long getModifiedDate() {
     return modified_date;
   }
 
@@ -285,7 +280,7 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
    * Sets the value of the 'modified_date' field.
    * @param value the value to set.
    */
-  public void setModifiedDate(java.time.LocalDate value) {
+  public void setModifiedDate(java.lang.Long value) {
     this.modified_date = value;
   }
 
@@ -335,9 +330,9 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
     private java.lang.Integer address_id;
     private java.lang.Integer department_id;
     private java.lang.String department;
-    private boolean is_active;
-    private java.time.LocalDate created_date;
-    private java.time.LocalDate modified_date;
+    private java.lang.Boolean is_active;
+    private java.lang.Long created_date;
+    private java.lang.Long modified_date;
 
     /** Creates a new Builder */
     private Builder() {
@@ -627,7 +622,7 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
       * Gets the value of the 'is_active' field.
       * @return The value.
       */
-    public boolean getIsActive() {
+    public java.lang.Boolean getIsActive() {
       return is_active;
     }
 
@@ -637,7 +632,7 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
       * @param value The value of 'is_active'.
       * @return This builder.
       */
-    public com.kgk.debezium.engine.demo.dto.Student.Builder setIsActive(boolean value) {
+    public com.kgk.debezium.engine.demo.dto.Student.Builder setIsActive(java.lang.Boolean value) {
       validate(fields()[5], value);
       this.is_active = value;
       fieldSetFlags()[5] = true;
@@ -658,6 +653,7 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
       * @return This builder.
       */
     public com.kgk.debezium.engine.demo.dto.Student.Builder clearIsActive() {
+      is_active = null;
       fieldSetFlags()[5] = false;
       return this;
     }
@@ -666,7 +662,7 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
       * Gets the value of the 'created_date' field.
       * @return The value.
       */
-    public java.time.LocalDate getCreatedDate() {
+    public java.lang.Long getCreatedDate() {
       return created_date;
     }
 
@@ -676,7 +672,7 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
       * @param value The value of 'created_date'.
       * @return This builder.
       */
-    public com.kgk.debezium.engine.demo.dto.Student.Builder setCreatedDate(java.time.LocalDate value) {
+    public com.kgk.debezium.engine.demo.dto.Student.Builder setCreatedDate(java.lang.Long value) {
       validate(fields()[6], value);
       this.created_date = value;
       fieldSetFlags()[6] = true;
@@ -706,7 +702,7 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
       * Gets the value of the 'modified_date' field.
       * @return The value.
       */
-    public java.time.LocalDate getModifiedDate() {
+    public java.lang.Long getModifiedDate() {
       return modified_date;
     }
 
@@ -716,7 +712,7 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
       * @param value The value of 'modified_date'.
       * @return This builder.
       */
-    public com.kgk.debezium.engine.demo.dto.Student.Builder setModifiedDate(java.time.LocalDate value) {
+    public com.kgk.debezium.engine.demo.dto.Student.Builder setModifiedDate(java.lang.Long value) {
       validate(fields()[7], value);
       this.modified_date = value;
       fieldSetFlags()[7] = true;
@@ -753,8 +749,8 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
         record.department_id = fieldSetFlags()[3] ? this.department_id : (java.lang.Integer) defaultValue(fields()[3]);
         record.department = fieldSetFlags()[4] ? this.department : (java.lang.String) defaultValue(fields()[4]);
         record.is_active = fieldSetFlags()[5] ? this.is_active : (java.lang.Boolean) defaultValue(fields()[5]);
-        record.created_date = fieldSetFlags()[6] ? this.created_date : (java.time.LocalDate) defaultValue(fields()[6]);
-        record.modified_date = fieldSetFlags()[7] ? this.modified_date : (java.time.LocalDate) defaultValue(fields()[7]);
+        record.created_date = fieldSetFlags()[6] ? this.created_date : (java.lang.Long) defaultValue(fields()[6]);
+        record.modified_date = fieldSetFlags()[7] ? this.modified_date : (java.lang.Long) defaultValue(fields()[7]);
         return record;
       } catch (org.apache.avro.AvroMissingFieldException e) {
         throw e;
@@ -782,6 +778,203 @@ public class Student extends org.apache.avro.specific.SpecificRecordBase impleme
     READER$.read(this, SpecificData.getDecoder(in));
   }
 
+  @Override protected boolean hasCustomCoders() { return true; }
+
+  @Override public void customEncode(org.apache.avro.io.Encoder out)
+    throws java.io.IOException
+  {
+    out.writeInt(this.id);
+
+    if (this.name == null) {
+      out.writeIndex(0);
+      out.writeNull();
+    } else {
+      out.writeIndex(1);
+      out.writeString(this.name);
+    }
+
+    if (this.address_id == null) {
+      out.writeIndex(0);
+      out.writeNull();
+    } else {
+      out.writeIndex(1);
+      out.writeInt(this.address_id);
+    }
+
+    if (this.department_id == null) {
+      out.writeIndex(0);
+      out.writeNull();
+    } else {
+      out.writeIndex(1);
+      out.writeInt(this.department_id);
+    }
+
+    if (this.department == null) {
+      out.writeIndex(0);
+      out.writeNull();
+    } else {
+      out.writeIndex(1);
+      out.writeString(this.department);
+    }
+
+    if (this.is_active == null) {
+      out.writeIndex(1);
+      out.writeNull();
+    } else {
+      out.writeIndex(0);
+      out.writeBoolean(this.is_active);
+    }
+
+    if (this.created_date == null) {
+      out.writeIndex(0);
+      out.writeNull();
+    } else {
+      out.writeIndex(1);
+      out.writeLong(this.created_date);
+    }
+
+    if (this.modified_date == null) {
+      out.writeIndex(0);
+      out.writeNull();
+    } else {
+      out.writeIndex(1);
+      out.writeLong(this.modified_date);
+    }
+
+  }
+
+  @Override public void customDecode(org.apache.avro.io.ResolvingDecoder in)
+    throws java.io.IOException
+  {
+    org.apache.avro.Schema.Field[] fieldOrder = in.readFieldOrderIfDiff();
+    if (fieldOrder == null) {
+      this.id = in.readInt();
+
+      if (in.readIndex() != 1) {
+        in.readNull();
+        this.name = null;
+      } else {
+        this.name = in.readString();
+      }
+
+      if (in.readIndex() != 1) {
+        in.readNull();
+        this.address_id = null;
+      } else {
+        this.address_id = in.readInt();
+      }
+
+      if (in.readIndex() != 1) {
+        in.readNull();
+        this.department_id = null;
+      } else {
+        this.department_id = in.readInt();
+      }
+
+      if (in.readIndex() != 1) {
+        in.readNull();
+        this.department = null;
+      } else {
+        this.department = in.readString();
+      }
+
+      if (in.readIndex() != 0) {
+        in.readNull();
+        this.is_active = null;
+      } else {
+        this.is_active = in.readBoolean();
+      }
+
+      if (in.readIndex() != 1) {
+        in.readNull();
+        this.created_date = null;
+      } else {
+        this.created_date = in.readLong();
+      }
+
+      if (in.readIndex() != 1) {
+        in.readNull();
+        this.modified_date = null;
+      } else {
+        this.modified_date = in.readLong();
+      }
+
+    } else {
+      for (int i = 0; i < 8; i++) {
+        switch (fieldOrder[i].pos()) {
+        case 0:
+          this.id = in.readInt();
+          break;
+
+        case 1:
+          if (in.readIndex() != 1) {
+            in.readNull();
+            this.name = null;
+          } else {
+            this.name = in.readString();
+          }
+          break;
+
+        case 2:
+          if (in.readIndex() != 1) {
+            in.readNull();
+            this.address_id = null;
+          } else {
+            this.address_id = in.readInt();
+          }
+          break;
+
+        case 3:
+          if (in.readIndex() != 1) {
+            in.readNull();
+            this.department_id = null;
+          } else {
+            this.department_id = in.readInt();
+          }
+          break;
+
+        case 4:
+          if (in.readIndex() != 1) {
+            in.readNull();
+            this.department = null;
+          } else {
+            this.department = in.readString();
+          }
+          break;
+
+        case 5:
+          if (in.readIndex() != 0) {
+            in.readNull();
+            this.is_active = null;
+          } else {
+            this.is_active = in.readBoolean();
+          }
+          break;
+
+        case 6:
+          if (in.readIndex() != 1) {
+            in.readNull();
+            this.created_date = null;
+          } else {
+            this.created_date = in.readLong();
+          }
+          break;
+
+        case 7:
+          if (in.readIndex() != 1) {
+            in.readNull();
+            this.modified_date = null;
+          } else {
+            this.modified_date = in.readLong();
+          }
+          break;
+
+        default:
+          throw new java.io.IOException("Corrupt ResolvingDecoder.");
+        }
+      }
+    }
+  }
 }
 
 

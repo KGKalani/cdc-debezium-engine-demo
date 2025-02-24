@@ -3,7 +3,6 @@ package com.kgk.debezium.engine.demo.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
 import java.util.Properties;
 
@@ -73,8 +72,8 @@ public class DBZEngineConfiguration {
     @Value("${config.debezium.database.table.include.list}")
     private String TABLE_INCLUDE_LIST;
 
-//    @Value("${config.debezium.database.column.include.list}")
-//    private String COLUMN_INCLUDE_LIST;
+    @Value("${config.debezium.database.column.exclude.list}")
+    private String COLUMN_EXCLUDE_LIST;
 
     @Value("${config.debezium.database.common.tables.slot_drop_on_stop}")
     private String SLOT_DROP_ON_STOP;
@@ -126,7 +125,7 @@ public class DBZEngineConfiguration {
                 //.with("database.sslmode", SSL_MODE)
                 .with("schema.include.list", SCHEMA_INCLUDE_LIST)
                 .with("table.include.list", TABLE_INCLUDE_LIST)
-//                .with("column.exclude.list", COLUMN_INCLUDE_LIST) TODO does not work properly
+                //.with("column.exclude.list", COLUMN_EXCLUDE_LIST)
                 .with("decimal.handling.mode", DECIMAL_HANDLING_MODE)
                 .with("time.precision.mode","connect")
                 .with("skip.messages.without.change", "true")

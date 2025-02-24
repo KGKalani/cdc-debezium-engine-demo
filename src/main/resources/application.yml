@@ -9,11 +9,12 @@ spring:
   kafka:
     bootstrap.servers: localhost:29092
     topic-avro: LOCAL_STUDENT_DATA_AVRO
+    topic-avro-generic: LOCAL_GENERIC_DATA_AVRO
     topic-json: LOCAL_STUDENT_DATA_JSON
     topic-student-avro: LOCAL_STUDENT_AVRO
-    schema:
-      registry:
-        url: http://127.0.0.1:8081/
+    schema.registry:
+#        url: http://127.0.0.1:8081/
+        url: http://localhost:8081/
 
 ##################### ACTUATOR CONFIG FOR APPLICATION HEALTH CHECK #######################
 management.endpoints.web.exposure.include: health,metrics
@@ -59,9 +60,9 @@ config:
 
       ### COMMON TABLES ###
       schema.include.list: demo
-      table.include.list: demo.students
+      table.include.list: demo.students, demo.address
       #column.include.list:
-      #column.exclude.list:
+      column.exclude.list: demo.students.created_date
       common.tables.slot_drop_on_stop: true
       decimal.handling.mode: double
 

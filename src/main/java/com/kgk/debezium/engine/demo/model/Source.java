@@ -1,6 +1,7 @@
 package com.kgk.debezium.engine.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,8 @@ public class Source {
     private String schema;
     private String table;
     private Long lsn;
+    @JsonProperty("ts_ms")
+    private Long tsMs;
 
     @Override
     public String toString() {

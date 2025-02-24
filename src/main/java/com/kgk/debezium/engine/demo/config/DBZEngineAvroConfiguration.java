@@ -72,8 +72,8 @@ public class DBZEngineAvroConfiguration {
     @Value("${config.debezium.database.table.include.list}")
     private String TABLE_INCLUDE_LIST;
 
-//    @Value("${config.debezium.database.column.include.list}")
-//    private String COLUMN_INCLUDE_LIST;
+    @Value("${config.debezium.database.column.exclude.list}")
+    private String COLUMN_EXCLUDE_LIST;
 
     @Value("${config.debezium.database.common.tables.slot_drop_on_stop}")
     private String SLOT_DROP_ON_STOP;
@@ -83,6 +83,9 @@ public class DBZEngineAvroConfiguration {
 
     @Value("${config.debezium.converter.schemas.enable}")
     private String CONVERTER_SCHEMAS_ENABLE;
+
+    @Value("${spring.kafka.schema.registry.url}")
+    private String SCHEMA_REGISTRY_URL;
 
     @Bean("dbzAvroProperties")
     //@Primary
@@ -125,19 +128,31 @@ public class DBZEngineAvroConfiguration {
                 //.with("database.sslmode", SSL_MODE)
                 .with("schema.include.list", SCHEMA_INCLUDE_LIST)
                 .with("table.include.list", TABLE_INCLUDE_LIST)
-//                .with("column.exclude.list", COLUMN_INCLUDE_LIST) TODO does not work properly
+                //.with("column.exclude.list", COLUMN_EXCLUDE_LIST) //does not work properly
                 .with("decimal.handling.mode", DECIMAL_HANDLING_MODE)
                 .with("time.precision.mode","connect")
                 .with("skip.messages.without.change", "true")
                 .with("include.before", "true") //if we need before record we need to set this as true
 
                 /*
-                 * AVRO Converter configuration
+                 * AVRO Converter configuration - Confluent
                  */
                 .with("key.converter","io.confluent.connect.avro.AvroConverter")
-                .with("key.converter.schema.registry.url","http://localhost:8081")
+                .with("key.converter.schema.registry.url",SCHEMA_REGISTRY_URL)
                 .with("value.converter","io.confluent.connect.avro.AvroConverter")
-                .with("value.converter.schema.registry.url","http://localhost:8081")
+                .with("value.converter.schema.registry.url",SCHEMA_REGISTRY_URL)
+
+                /*
+                 * AVRO Converter configuration - Apicurio
+                 */
+//                .with("key.converter","io.apicurio.registry.utils.converter.AvroConverter")
+//                .with("key.converter.apicurio.registry.url",SCHEMA_REGISTRY_URL)
+//                .with("key.converter.apicurio.registry.global-id","io.apicurio.registry.utils.serde.strategy.AutoRegisterIdStrategy")
+//                .with("key.converter.apicurio.registry.as-confluent","true")
+//                .with("value.converter","io.apicurio.registry.utils.converter.AvroConverter")
+//                .with("value.converter.apicurio.registry.url",SCHEMA_REGISTRY_URL)
+//                .with("value.converter.apicurio.registry.global-id","io.apicurio.registry.utils.serde.strategy.AutoRegisterIdStrategy")
+//                .with("value.converter.apicurio.registry.as-confluent","true")
 
                 /*
                     MESSAGE SETTINGS

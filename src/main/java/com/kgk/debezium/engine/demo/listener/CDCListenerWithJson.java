@@ -1,11 +1,8 @@
 package com.kgk.debezium.engine.demo.listener;
 
 import com.kgk.debezium.engine.demo.service.DestinationRouteService;
-import io.debezium.embedded.Connect;
 import io.debezium.engine.ChangeEvent;
 import io.debezium.engine.DebeziumEngine;
-import io.debezium.engine.RecordChangeEvent;
-import io.debezium.engine.format.ChangeEventFormat;
 import io.debezium.engine.format.Json;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -18,11 +15,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.sql.Struct;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,6 +35,7 @@ public class CDCListenerWithJson {
      * CDC to work.
      */
     private DebeziumEngine<ChangeEvent<String, String>> engineInJson;
+  //  private DebeziumEngine<ChangeEvent<SourceRecord, SourceRecord>> engineInJson;
 
 
     /**
@@ -61,6 +58,7 @@ public class CDCListenerWithJson {
                 .create(Json.class)
                 .using(dbzProperties)
                 .notifying(this::handleChangeEventInJson)
+                .notifying(this::handleChangeEventInJson)
                 .build()
         ){
             this.engineInJson = engine;
@@ -68,28 +66,66 @@ public class CDCListenerWithJson {
             logger.error("RTIOException", ioException);
         }
 
+//        try(DebeziumEngine<ChangeEvent<SourceRecord, SourceRecord>> engine = DebeziumEngine
+//                .create(Connect.class)
+//                .using(dbzProperties)
+//                .notifying(this::handleChangeEventSourceRecordInJson)
+//                .build()
+//        ){
+//            this.engineInJson = engine;
+//        } catch (IOException ioException) {
+//            logger.error("RTIOException", ioException);
+//        }
+
 
     }
 
+
     //=============================Capture Single Records in Json Format==========================================================
     /**
-     * Capture Single Records in Json Format
+     * Capture Single Records in Json Format and pushed kafka message in Json serialized and Avro serialized format
      * @param changeRecord : ChangeEvent
      */
     private void handleChangeEventInJson(ChangeEvent<String, String> changeRecord) {
+        long start = epochMicro();
         try {
             if (changeRecord.destination() != null) {
                 if (changeRecord.destination().contains("__debezium-heartbeat")) {
                     logger.info("This is heartbeat event. source {}", changeRecord.value());
                 } else {
-                    //destinationRouteService.routeJson(changeRecord, Timestamp.valueOf(LocalDateTime.now(estZoneId)));
+                   // destinationRouteService.routeJson(changeRecord, Timestamp.valueOf(LocalDateTime.now(estZoneId)));
                     destinationRouteService.routeAvro(changeRecord, Timestamp.valueOf(LocalDateTime.now(estZoneId)));
+                    long end = epochMicro();
+                    logger.info("Time taken to process Change Event in Json with Avro Serialization : {}", (end-start));
                 }
             }
         } catch (Exception e) {
             logger.error("Change Event Handler failed due to {} ",e.getMessage());
         }
     }
+
+    private long epochMicro() {
+        return Instant.now().toEpochMilli() * 1_000 + Instant.now().getNano() / 1_000;
+    }
+
+    private void handleChangeEventSourceRecordInJson(ChangeEvent<SourceRecord, SourceRecord> changeRecord) {
+        try {
+            if (changeRecord.destination() != null) {
+                if (changeRecord.destination().contains("__debezium-heartbeat")) {
+                    logger.info("This is heartbeat event. source {}", changeRecord.value());
+                } else {
+                   // destinationRouteService.routeJson(changeRecord, Timestamp.valueOf(LocalDateTime.now(estZoneId)));
+                    //destinationRouteService.routeAvro(changeRecord, Timestamp.valueOf(LocalDateTime.now(estZoneId)));
+                    SourceRecord sourceRecord = changeRecord.value();
+                    Object value = sourceRecord.value();
+
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Change Event Handler failed due to {} ",e.getMessage());
+        }
+    }
+
 
     @PostConstruct
     public void start() {

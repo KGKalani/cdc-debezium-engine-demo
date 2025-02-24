@@ -1,19 +1,11 @@
 package com.kgk.debezium.engine.demo.listener;
 
-import com.kgk.debezium.engine.demo.service.DestinationRouteService;
-import io.confluent.connect.avro.AvroConverter;
-import io.confluent.kafka.serializers.KafkaAvroSerializer;
-import io.debezium.embedded.Connect;
+import com.kgk.debezium.engine.demo.service.AvroDestinationRouteService;
 import io.debezium.engine.ChangeEvent;
 import io.debezium.engine.DebeziumEngine;
-import io.debezium.engine.RecordChangeEvent;
 import io.debezium.engine.format.Avro;
-import io.debezium.engine.format.ChangeEventFormat;
-import io.debezium.engine.format.Json;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import org.apache.avro.generic.GenericRecord;
-import org.apache.kafka.connect.source.SourceRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +14,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.sql.Struct;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -36,8 +27,9 @@ import java.util.concurrent.TimeUnit;
 @ConditionalOnProperty(name = "config.application.enable-debezium-cdc-engine-avro", havingValue = "true", matchIfMissing = false)
 public class CDCListenerWithAvro {
     private final Logger logger = LoggerFactory.getLogger(CDCListenerWithAvro.class);
+
     @Autowired
-    private DestinationRouteService destinationRouteService;
+    private AvroDestinationRouteService avroDestinationRouteService;
     /**
      * The Debezium engine which needs to be loaded with the configurations, Started and Stopped - for the
      * CDC to work.
@@ -57,60 +49,41 @@ public class CDCListenerWithAvro {
     @Autowired
     public CDCListenerWithAvro(@Qualifier("dbzAvroProperties") Properties dbzProperties) {
         this.executor = Executors.newSingleThreadExecutor();
-        this.estZoneId = ZoneId.of("America/New_York") ;
+        this.estZoneId = ZoneId.of("America/New_York");
 
-        //---------------------Json.class with ChangeEvent<String, String>
-        try(DebeziumEngine<ChangeEvent<byte[], byte[]>> engine = DebeziumEngine
+        //---------------------Avro.class with ChangeEvent<String, String>
+        try (DebeziumEngine<ChangeEvent<byte[], byte[]>> engine = DebeziumEngine
                 .create(Avro.class)
                 .using(dbzProperties)
                 .notifying(this::handleChangeEventInAvro)
-//                .notifying(record -> {
-//                    GenericRecord genericRecordRecordChangeEvent =  new GenericRecord();
-//                    for (RecordChangeEvent<GenericRecord> recordChange : record) {
-//                        GenericRecord record = recordChange.record();      // Now you can directly access the Avro record
-//                        GenericRecord after = (GenericRecord) record.get("after");
-//                        if (after != null) {
-//                            Long id = (Long) after.get("id");
-//                            String name = after.get("name").toString();
-//                        }
-//                    }
-//                })
                 .build()
-        ){
+        ) {
             this.engineInAvro = engine;
         } catch (IOException ioException) {
             logger.error("RTIOException", ioException);
         }
-
-
     }
 
     //=============================Capture Single Records in Avro Format==========================================================
-    private void handleChangeEventInAvro(ChangeEvent<byte[],byte[]> changeEvent) {
-        logger.info("destination {}", changeEvent.destination());
-        logger.info("key {}", changeEvent.key());
-        logger.info("value {}", changeEvent.value());
-
-    }
-
-    //=============================Capture Single Records in Json Format==========================================================
-    /**
-     * Capture Single Records in Json Format
-     * @param changeRecord : ChangeEvent
-     */
-    private void handleChangeEventInJson(ChangeEvent<String, String> changeRecord) {
+    private void handleChangeEventInAvro(ChangeEvent<byte[], byte[]> changeEvent) {
+        long start = epochMicro();
         try {
-            if (changeRecord.destination() != null) {
-                if (changeRecord.destination().contains("__debezium-heartbeat")) {
-                    logger.info("This is heartbeat event. source {}", changeRecord.value());
+            if (changeEvent.destination() != null) {
+                if (changeEvent.destination().contains("__debezium-heartbeat")) {
+                    logger.info("This is heartbeat event. source {}", changeEvent.value());
                 } else {
-                    //destinationRouteService.routeJson(changeRecord, Timestamp.valueOf(LocalDateTime.now(estZoneId)));
-                    destinationRouteService.routeAvro(changeRecord, Timestamp.valueOf(LocalDateTime.now(estZoneId)));
+                    avroDestinationRouteService.routeAvroByteArray(changeEvent, Timestamp.valueOf(LocalDateTime.now(estZoneId)));
+                    long end = epochMicro();
+                    logger.info("Time taken to process Change Event in Avro Byte Array with Avro Serialization : {}", (end-start));
                 }
             }
         } catch (Exception e) {
-            logger.error("Change Event Handler failed due to {} ",e.getMessage());
+            logger.error("Change Event Handler failed due to {} ", e.getMessage());
         }
+    }
+
+    private long epochMicro() {
+        return Instant.now().toEpochMilli() * 1_000 + Instant.now().getNano() / 1_000;
     }
 
     @PostConstruct
@@ -127,7 +100,7 @@ public class CDCListenerWithAvro {
         try {
             engineInAvro.close();
             executor.shutdown();
-            while (!executor.awaitTermination(5, TimeUnit.SECONDS)){
+            while (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
                 logger.info("Waiting another 5 seconds for the debezium engine to shut down");
             }
         } catch (IOException ioException) {

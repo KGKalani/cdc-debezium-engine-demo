@@ -5,19 +5,17 @@
  */
 package com.kgk.debezium.engine.demo.dto;
 
-import org.apache.avro.generic.GenericArray;
-import org.apache.avro.specific.SpecificData;
-import org.apache.avro.util.Utf8;
-import org.apache.avro.message.BinaryMessageEncoder;
 import org.apache.avro.message.BinaryMessageDecoder;
+import org.apache.avro.message.BinaryMessageEncoder;
 import org.apache.avro.message.SchemaStore;
+import org.apache.avro.specific.SpecificData;
 
 @org.apache.avro.specific.AvroGenerated
 public class Source extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = -2680484096638562712L;
+  private static final long serialVersionUID = 7691303217414650370L;
 
 
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Source\",\"namespace\":\"com.kgk.debezium.engine.demo.dto\",\"fields\":[{\"name\":\"db\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"schema\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"table\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"lsn\",\"type\":\"long\"}]}");
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"Source\",\"namespace\":\"com.kgk.debezium.engine.demo.dto\",\"fields\":[{\"name\":\"db\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"schema\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"table\",\"type\":{\"type\":\"string\",\"avro.java.string\":\"String\"}},{\"name\":\"lsn\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"ts_ms\",\"type\":\"long\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static final SpecificData MODEL$ = new SpecificData();
@@ -76,7 +74,8 @@ public class Source extends org.apache.avro.specific.SpecificRecordBase implemen
   private java.lang.String db;
   private java.lang.String schema;
   private java.lang.String table;
-  private long lsn;
+  private java.lang.Long lsn;
+  private long ts_ms;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -91,12 +90,14 @@ public class Source extends org.apache.avro.specific.SpecificRecordBase implemen
    * @param schema The new value for schema
    * @param table The new value for table
    * @param lsn The new value for lsn
+   * @param ts_ms The new value for ts_ms
    */
-  public Source(java.lang.String db, java.lang.String schema, java.lang.String table, java.lang.Long lsn) {
+  public Source(java.lang.String db, java.lang.String schema, java.lang.String table, java.lang.Long lsn, java.lang.Long ts_ms) {
     this.db = db;
     this.schema = schema;
     this.table = table;
     this.lsn = lsn;
+    this.ts_ms = ts_ms;
   }
 
   @Override
@@ -113,6 +114,7 @@ public class Source extends org.apache.avro.specific.SpecificRecordBase implemen
     case 1: return schema;
     case 2: return table;
     case 3: return lsn;
+    case 4: return ts_ms;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -126,6 +128,7 @@ public class Source extends org.apache.avro.specific.SpecificRecordBase implemen
     case 1: schema = value$ != null ? value$.toString() : null; break;
     case 2: table = value$ != null ? value$.toString() : null; break;
     case 3: lsn = (java.lang.Long)value$; break;
+    case 4: ts_ms = (java.lang.Long)value$; break;
     default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
     }
   }
@@ -185,7 +188,7 @@ public class Source extends org.apache.avro.specific.SpecificRecordBase implemen
    * Gets the value of the 'lsn' field.
    * @return The value of the 'lsn' field.
    */
-  public long getLsn() {
+  public java.lang.Long getLsn() {
     return lsn;
   }
 
@@ -194,8 +197,25 @@ public class Source extends org.apache.avro.specific.SpecificRecordBase implemen
    * Sets the value of the 'lsn' field.
    * @param value the value to set.
    */
-  public void setLsn(long value) {
+  public void setLsn(java.lang.Long value) {
     this.lsn = value;
+  }
+
+  /**
+   * Gets the value of the 'ts_ms' field.
+   * @return The value of the 'ts_ms' field.
+   */
+  public long getTsMs() {
+    return ts_ms;
+  }
+
+
+  /**
+   * Sets the value of the 'ts_ms' field.
+   * @param value the value to set.
+   */
+  public void setTsMs(long value) {
+    this.ts_ms = value;
   }
 
   /**
@@ -242,7 +262,8 @@ public class Source extends org.apache.avro.specific.SpecificRecordBase implemen
     private java.lang.String db;
     private java.lang.String schema;
     private java.lang.String table;
-    private long lsn;
+    private java.lang.Long lsn;
+    private long ts_ms;
 
     /** Creates a new Builder */
     private Builder() {
@@ -271,6 +292,10 @@ public class Source extends org.apache.avro.specific.SpecificRecordBase implemen
         this.lsn = data().deepCopy(fields()[3].schema(), other.lsn);
         fieldSetFlags()[3] = other.fieldSetFlags()[3];
       }
+      if (isValidValue(fields()[4], other.ts_ms)) {
+        this.ts_ms = data().deepCopy(fields()[4].schema(), other.ts_ms);
+        fieldSetFlags()[4] = other.fieldSetFlags()[4];
+      }
     }
 
     /**
@@ -294,6 +319,10 @@ public class Source extends org.apache.avro.specific.SpecificRecordBase implemen
       if (isValidValue(fields()[3], other.lsn)) {
         this.lsn = data().deepCopy(fields()[3].schema(), other.lsn);
         fieldSetFlags()[3] = true;
+      }
+      if (isValidValue(fields()[4], other.ts_ms)) {
+        this.ts_ms = data().deepCopy(fields()[4].schema(), other.ts_ms);
+        fieldSetFlags()[4] = true;
       }
     }
 
@@ -421,7 +450,7 @@ public class Source extends org.apache.avro.specific.SpecificRecordBase implemen
       * Gets the value of the 'lsn' field.
       * @return The value.
       */
-    public long getLsn() {
+    public java.lang.Long getLsn() {
       return lsn;
     }
 
@@ -431,7 +460,7 @@ public class Source extends org.apache.avro.specific.SpecificRecordBase implemen
       * @param value The value of 'lsn'.
       * @return This builder.
       */
-    public com.kgk.debezium.engine.demo.dto.Source.Builder setLsn(long value) {
+    public com.kgk.debezium.engine.demo.dto.Source.Builder setLsn(java.lang.Long value) {
       validate(fields()[3], value);
       this.lsn = value;
       fieldSetFlags()[3] = true;
@@ -452,7 +481,47 @@ public class Source extends org.apache.avro.specific.SpecificRecordBase implemen
       * @return This builder.
       */
     public com.kgk.debezium.engine.demo.dto.Source.Builder clearLsn() {
+      lsn = null;
       fieldSetFlags()[3] = false;
+      return this;
+    }
+
+    /**
+      * Gets the value of the 'ts_ms' field.
+      * @return The value.
+      */
+    public long getTsMs() {
+      return ts_ms;
+    }
+
+
+    /**
+      * Sets the value of the 'ts_ms' field.
+      * @param value The value of 'ts_ms'.
+      * @return This builder.
+      */
+    public com.kgk.debezium.engine.demo.dto.Source.Builder setTsMs(long value) {
+      validate(fields()[4], value);
+      this.ts_ms = value;
+      fieldSetFlags()[4] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'ts_ms' field has been set.
+      * @return True if the 'ts_ms' field has been set, false otherwise.
+      */
+    public boolean hasTsMs() {
+      return fieldSetFlags()[4];
+    }
+
+
+    /**
+      * Clears the value of the 'ts_ms' field.
+      * @return This builder.
+      */
+    public com.kgk.debezium.engine.demo.dto.Source.Builder clearTsMs() {
+      fieldSetFlags()[4] = false;
       return this;
     }
 
@@ -465,6 +534,7 @@ public class Source extends org.apache.avro.specific.SpecificRecordBase implemen
         record.schema = fieldSetFlags()[1] ? this.schema : (java.lang.String) defaultValue(fields()[1]);
         record.table = fieldSetFlags()[2] ? this.table : (java.lang.String) defaultValue(fields()[2]);
         record.lsn = fieldSetFlags()[3] ? this.lsn : (java.lang.Long) defaultValue(fields()[3]);
+        record.ts_ms = fieldSetFlags()[4] ? this.ts_ms : (java.lang.Long) defaultValue(fields()[4]);
         return record;
       } catch (org.apache.avro.AvroMissingFieldException e) {
         throw e;
@@ -503,7 +573,15 @@ public class Source extends org.apache.avro.specific.SpecificRecordBase implemen
 
     out.writeString(this.table);
 
-    out.writeLong(this.lsn);
+    if (this.lsn == null) {
+      out.writeIndex(0);
+      out.writeNull();
+    } else {
+      out.writeIndex(1);
+      out.writeLong(this.lsn);
+    }
+
+    out.writeLong(this.ts_ms);
 
   }
 
@@ -518,10 +596,17 @@ public class Source extends org.apache.avro.specific.SpecificRecordBase implemen
 
       this.table = in.readString();
 
-      this.lsn = in.readLong();
+      if (in.readIndex() != 1) {
+        in.readNull();
+        this.lsn = null;
+      } else {
+        this.lsn = in.readLong();
+      }
+
+      this.ts_ms = in.readLong();
 
     } else {
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < 5; i++) {
         switch (fieldOrder[i].pos()) {
         case 0:
           this.db = in.readString();
@@ -536,7 +621,16 @@ public class Source extends org.apache.avro.specific.SpecificRecordBase implemen
           break;
 
         case 3:
-          this.lsn = in.readLong();
+          if (in.readIndex() != 1) {
+            in.readNull();
+            this.lsn = null;
+          } else {
+            this.lsn = in.readLong();
+          }
+          break;
+
+        case 4:
+          this.ts_ms = in.readLong();
           break;
 
         default:

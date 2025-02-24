@@ -44,6 +44,7 @@ dependencies {
 	implementation 'io.confluent:kafka-schema-registry-client:7.8.0'
 	implementation 'org.apache.avro:avro:1.12.0'
 	implementation 'io.confluent:kafka-connect-avro-converter:7.8.0' //this is to configure avro converter to debezium engine
+	implementation 'io.apicurio:apicurio-registry-utils-converter:2.6.8.Final'
 
 	// Lombok dependencies
 	compileOnly 'org.projectlombok:lombok'
@@ -60,8 +61,19 @@ avro {
 	fieldVisibility = "PRIVATE"
 }
 
+def schemaFiles = files(
+		"src/main/resources/avro/GenericChangedRecord.avsc",
+		"src/main/resources/avro/StudentChangedRecord.avsc"
+)
+
+def excludedFiles = files(
+		"src/main/resources/avro/debeziumChangedEventKey.avsc",
+		"src/main/resources/avro/debeziumChangedEventValue.avsc"
+)
+
 def generateAvro = tasks.register('generateAvro', GenerateAvroJavaTask) {
-	source("src/main/resources/avro") // where Avro schema files are located
+//	source("src/main/resources/avro") // where Avro schema files are located
+	source(schemaFiles) // where Avro schema files are located
 	outputDir = file("src/main/java") // where Java classes will be placed
 }
 
